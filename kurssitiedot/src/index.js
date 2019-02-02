@@ -1,61 +1,52 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-const Header = props =>
-  <h1>{props.course}</h1>
-
-const Total = props => {
-  const total = props.parts[0].exercises + props.parts[1].exercises + props.parts[2].exercises
-
-  return <p>yhteensä {total} tehtävää</p>
-}
-  
-
-const Part = props =>
-  <p>{props.part.name} {props.part.exercises}</p>
-
-const Content = props => (
-  <div>
-    {props.parts.map(part => 
-      <Part key={part.id} part={part} />
-    )}
-  </div>
-)
-
-const Course = ({ course }) => {
-  return (
-    <div>
-      <Header course={course.name} />
-      <Content parts={course.parts} />
-    </div>
-  )
-}
+import Course from './components/Course';
 
 const App = () => {
-  const course = {
-    name: 'Half Stack -sovelluskehitys',
-    parts: [
-      {
-        name: 'Reactin perusteet',
-        exercises: 10,
-        id: 1
-      },
-      {
-        name: 'Tiedonvälitys propseilla',
-        exercises: 7,
-        id: 2
-      },
-      {
-        name: 'Komponenttien tila',
-        exercises: 14,
-        id: 3
-      }
-    ]
-  }
+  const courses = [
+    {
+      name: 'Half Stack -sovelluskehitys',
+      id: 1,
+      parts: [
+        {
+          name: 'Reactin perusteet',
+          exercises: 10,
+          id: 1
+        },
+        {
+          name: 'Tiedonvälitys propseilla',
+          exercises: 7,
+          id: 2
+        },
+        {
+          name: 'Komponenttien tila',
+          exercises: 14,
+          id: 3
+        }
+      ]
+    },
+    {
+      name: 'Node.js',
+      id: 2,
+      parts: [
+        {
+          name: 'Routing',
+          exercises: 2,
+          id: 1
+        },
+        {
+          name: 'Middlewaret',
+          exercises: 7,
+          id: 2
+        }
+      ]
+    }
+  ]
 
   return (
     <div>
-      <Course course={course} />
+      <Course courses={courses} />
     </div>
   )
 }
