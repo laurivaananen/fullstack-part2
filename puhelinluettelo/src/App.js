@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios';
+
+import './index.css';
 
 import Filter from './components/Filter';
+import Notification from './components/Notification';
 import PersonForm from './components/PersonForm';
 import People from './components/People';
 import peopleService from './services/People';
@@ -11,6 +13,7 @@ const App = () => {
   const [ newFilter, setNewFilter ] = useState('')
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
+  const [ notification, setNotification ] = useState({message: '', style: 'errorMessage'})
 
   useEffect(() => {
     peopleService
@@ -22,6 +25,13 @@ const App = () => {
           console.log(error)
         })
   }, [])
+
+  const handleNotification = (message, style='errorMessage') => {
+    setNotification({message, style});
+    setTimeout(() => {
+      setNotification('')
+    }, 4000)
+  }
 
   const handleFilterChange = event => {
     setNewFilter(event.target.value);
@@ -44,9 +54,10 @@ const App = () => {
         .remove(event.target.value)
           .then(person => {
             setPersons(persons.filter(person => person.id != personId))
+            handleNotification(`Poistettiin henkilö ${name} onnistuneesti`, 'successMessage')
           })
           .catch(error => {
-            console.log(error)
+            handleNotification(`Henkilö ${name} oli jo poistettu`);
           })
     }
   }
@@ -59,6 +70,7 @@ const App = () => {
             person.id === updatedPerson.id ? updatedPerson : person
           ))
         })
+    handleNotification(`Updated ${person.name} number`, 'successMessage');
   }
 
   const handleAddName = event => {
@@ -80,16 +92,18 @@ const App = () => {
             setPersons(persons.concat(person))
           })
           .catch(error => {
-            console.log(error);
+            handleNotification(`Error adding ${newName} to puhelinluettelo`);
           })
       setNewName('');
       setNewNumber('');
+      handleNotification(`Added ${newName} to puhelinluettelo`, 'successMessage');
     }
   }
 
   return (
     <div>
       <h1>Puhelinluettelo</h1>
+      <Notification notification={notification.message} style={notification.style} />
       <Filter newFilter={newFilter} handleFilterChange={handleFilterChange} />
       <h2>Lisää uusi</h2>
       <PersonForm
